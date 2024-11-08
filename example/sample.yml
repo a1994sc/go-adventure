@@ -1,0 +1,10 @@
+tree:
+  branch:
+    slices:
+      slice1:
+        - w: 1
+        - w: 2
+          h: 3
+      slice2:
+        - w: 11
+          h: 22

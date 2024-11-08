@@ -1,0 +1,26 @@
+From f5ce6cf5a48ba9cb3d6e670fae1cd104d45eea44 Mon Sep 17 00:00:00 2001
+From: Jonathan Thiessen <jonathan@wtfast.com>
+Date: Mon, 13 Feb 2023 15:30:57 -0800
+Subject: [PATCH] Use `nix eval` instead of `nix-instantiate` for `gomod2nix
+ import`
+
+---
+ internal/generate/generate.go | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/internal/generate/generate.go b/internal/generate/generate.go
+index 12db73b..192e690 100644
+--- a/internal/generate/generate.go
++++ b/internal/generate/generate.go
+@@ -107,8 +107,9 @@ func ImportPkgs(directory string, numWorkers int) error {
+ 			pathName := filepath.Base(dl.Path) + "_" + dl.Version
+ 
+ 			cmd := exec.Command(
+-				"nix-instantiate",
+-				"--eval",
++				"nix",
++				"eval",
++				"--impure",
+ 				"--expr",
+ 				fmt.Sprintf(`
+ builtins.filterSource (name: type: baseNameOf name != ".DS_Store") (
