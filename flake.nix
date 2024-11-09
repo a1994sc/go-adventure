@@ -75,6 +75,7 @@
                     ];
                 };
               };
+              programs.gofmt.enable = true;
               programs.jsonfmt = {
                 enable = true;
                 package = pkgs.jsonfmt;
@@ -102,13 +103,18 @@
             }
           );
           goEnv = pkgs.mkGoEnv { pwd = ./.; };
+          pname = "adventure";
+          version = "0.0.1";
         in
         rec {
           devShells.default = pkgs.mkShell {
-            shellHook = ''
-              GOROOT="$(dirname $(dirname $(which go)))/share/go"
-              unset GOPATH;
-            '';
+            shellHook =
+              ''
+                GOROOT="$(dirname $(dirname $(which go)))/share/go"
+                unset GOPATH;
+              ''
+              + "\n"
+              + self'.checks.pre-commit-check.shellHook;
             packages = [
               goEnv
               pkgs.go
@@ -119,15 +125,17 @@
             ];
           };
           packages.default = pkgs.buildGoApplication {
-            pname = "myapp";
-            version = "0.1";
+            inherit pname version;
             pwd = ./.;
             src = ./.;
             modules = ./gomod2nix.toml;
 
+            CGO_ENABLED = 0;
+
             ldflags = [
               "-s"
               "-w"
+              "-X github.com/a1994sc/go-adventure/cmd/stringer.version=${version}"
             ];
           };
           packages.gomod2nix = inputs.gomod2nix.packages.${system}.default.overrideAttrs (
@@ -136,6 +144,24 @@
             }
           );
           formatter = treefmtEval.config.build.wrapper;
+          checks.pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              # keep-sorted start case=no
+              check-executables-have-shebangs.enable = true;
+              detect-private-keys.enable = true;
+              end-of-file-fixer.enable = true;
+              gofmt.enable = true;
+              nixfmt-rfc-style.enable = true;
+              trim-trailing-whitespace.enable = true;
+              # keep-sorted end
+              file-format-nix = {
+                enable = true;
+                entry = "nix fmt";
+                pass_filenames = false;
+              };
+            };
+          };
         };
     };
 }
