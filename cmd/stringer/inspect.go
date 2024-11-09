@@ -3,7 +3,7 @@ package stringer
 import (
 	"fmt"
 
-	"github.com/a1994sc/go-adventure/pkg/stringer"
+	"github.com/a1994sc/axol/pkg/stringer"
 	"github.com/spf13/cobra"
 )
 

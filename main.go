@@ -1,6 +1,6 @@
 package main
 
-import "github.com/a1994sc/go-adventure/cmd/stringer"
+import "github.com/a1994sc/axol/cmd/stringer"
 
 func main() {
 	stringer.Execute()

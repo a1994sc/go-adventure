@@ -103,7 +103,7 @@
             }
           );
           goEnv = pkgs.mkGoEnv { pwd = ./.; };
-          pname = "adventure";
+          pname = "axol";
           version = "0.0.1";
         in
         rec {
@@ -135,12 +135,17 @@
             ldflags = [
               "-s"
               "-w"
-              "-X github.com/a1994sc/go-adventure/cmd/stringer.version=${version}"
+              "-X github.com/a1994sc/axol/cmd/stringer.version=${version}"
             ];
           };
           packages.gomod2nix = inputs.gomod2nix.packages.${system}.default.overrideAttrs (
-            finalAttrs: previousAttrs: {
-              patches = [ ./patches/gomod2nix-fix.patch ];
+            final: prev: {
+              patches = [
+                (pkgs.fetchpatch2 {
+                  url = "https://github.com/nix-community/gomod2nix/commit/f5ce6cf5a48ba9cb3d6e670fae1cd104d45eea44.patch";
+                  hash = "sha256-DPJh0o4xiPSscXWyEcp2TfP8DwoV6qGublr7iGT0QLs=";
+                })
+              ];
             }
           );
           formatter = treefmtEval.config.build.wrapper;
