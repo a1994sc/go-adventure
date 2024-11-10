@@ -105,6 +105,7 @@
           goEnv = pkgs.mkGoEnv { pwd = ./.; };
           pname = "axol";
           version = "0.0.1";
+          commit = if (self ? shortRev) then self.shortRev else "dirty";
         in
         rec {
           devShells.default = pkgs.mkShell {
@@ -136,6 +137,7 @@
               "-s"
               "-w"
               "-X github.com/a1994sc/axol/cmd/stringer.version=${version}"
+              "-X github.com/a1994sc/axol/cmd/stringer.commit=${commit}"
             ];
           };
           packages.gomod2nix = inputs.gomod2nix.packages.${system}.default.overrideAttrs (
