@@ -14,7 +14,7 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version number of Axol",
 	Long:  `All software has versions. This is Axol's`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Axol Static Site Generator v%s -- %s\n", version, commit)
+		fmt.Printf("Axol v%s -- %s\n", version, commit)
 	},
 }
 

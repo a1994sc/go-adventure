@@ -2,6 +2,8 @@ package stringer
 
 import (
 	"fmt"
+	"io/fs"
+	"log"
 	"strings"
 
 	yaml "github.com/goccy/go-yaml"
@@ -23,6 +25,8 @@ var schemaText = `
 }
 `
 
+var ListSchema fs.ReadFileFS
+
 var schemaCmd = &cobra.Command{
 	Use:     "schema",
 	Aliases: []string{"sch"},
@@ -34,18 +38,23 @@ var schemaCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
+		data, err := ListSchema.ReadFile("schema/list.schema.json")
+		if err != nil {
+			log.Fatal(err)
+		}
 		compiler := jsonschema.NewCompiler()
-		if err := compiler.AddResource("schema.json", strings.NewReader(schemaText)); err != nil {
+		if err := compiler.AddResource("schema/list.schema.json", strings.NewReader(string(data))); err != nil {
 			panic(err)
 		}
-		schema, err := compiler.Compile("schema.json")
+		schema, err := compiler.Compile("schema/list.schema.json")
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 		if err := schema.ValidateInterface(m); err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 		fmt.Println(schemaText)
+		fmt.Println()
 	},
 }
 
