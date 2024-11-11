@@ -1,4 +1,4 @@
-package stringer
+package cmd
 
 import (
 	"fmt"

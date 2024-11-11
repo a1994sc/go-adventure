@@ -111,7 +111,7 @@
           devShells.default = pkgs.mkShell {
             shellHook =
               ''
-                GOROOT="$(dirname $(dirname $(which go)))/share/go"
+                export GOROOT="${pkgs.go}/share/go"
                 unset GOPATH;
               ''
               + "\n"
@@ -136,7 +136,7 @@
             ldflags = [
               "-s"
               "-w"
-              "-X github.com/a1994sc/axol/cmd/stringer.version=${version}"
+              "-X github.com/a1994sc/axol/cmd/stringer.version=v${version}"
               "-X github.com/a1994sc/axol/cmd/stringer.commit=${commit}"
             ];
           };

@@ -1,4 +1,4 @@
-package stringer
+package cmd
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/a1994sc/axol/pkg/stringer"
+	"github.com/a1994sc/axol/pkg/transform"
 	"github.com/goccy/go-yaml"
 	"github.com/santhosh-tekuri/jsonschema"
 	"github.com/spf13/cobra"
@@ -16,9 +16,9 @@ import (
 var ListSchema fs.ReadFileFS
 
 var schemaCmd = &cobra.Command{
-	Use:     "schema",
+	Use:     "schema [ file ]",
 	Aliases: []string{"sch"},
-	Short:   "Reverses a string",
+	Short:   "Validate a schema",
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		content, err := os.ReadFile(args[0])
@@ -26,10 +26,7 @@ var schemaCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		// var m interface{}
-		// err = yaml.Unmarshal([]byte(content), &m)
-
-		docs, _ := stringer.SplitYAML(content)
+		docs, _ := transform.SplitYAML(content)
 
 		for _, doc := range docs {
 			var m interface{}
