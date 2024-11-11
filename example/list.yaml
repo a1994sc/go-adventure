@@ -1,0 +1,4 @@
+---
+# yaml-language-server: $schema=../schema/list.schema.json
+- Hello
+- World

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"log"
+	"os"
 	"strings"
 
 	yaml "github.com/goccy/go-yaml"
@@ -11,29 +12,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var yamlText = `
-- one
-- two
-`
-
-var schemaText = `
-{
-	"type": "array",
-	"items": {
-		"type": "string"
-	}
-}
-`
-
 var ListSchema fs.ReadFileFS
 
 var schemaCmd = &cobra.Command{
 	Use:     "schema",
 	Aliases: []string{"sch"},
 	Short:   "Reverses a string",
+	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		content, err := os.ReadFile(args[0])
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		var m interface{}
-		err := yaml.Unmarshal([]byte(yamlText), &m)
+		err = yaml.Unmarshal([]byte(content), &m)
 
 		if err != nil {
 			panic(err)
@@ -53,8 +46,7 @@ var schemaCmd = &cobra.Command{
 		if err := schema.ValidateInterface(m); err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(schemaText)
-		fmt.Println()
+		fmt.Println("Yaml is valid")
 	},
 }
 
