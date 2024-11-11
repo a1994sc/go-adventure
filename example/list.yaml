@@ -2,3 +2,8 @@
 # yaml-language-server: $schema=../schema/list.schema.json
 - Hello
 - World
+---
+# yaml-language-server: $schema=../schema/list.schema.json
+- World
+- Is
+- Cool

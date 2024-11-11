@@ -1,7 +1,11 @@
 package stringer
 
 import (
+	"bytes"
+	"io"
 	"strconv"
+
+	yaml "github.com/goccy/go-yaml"
 )
 
 func Reverse(input string) (result string) {
@@ -26,4 +30,27 @@ func inspectNumbers(input string) (count int) {
 		}
 	}
 	return count
+}
+
+func SplitYAML(resources []byte) ([][]byte, error) {
+
+	dec := yaml.NewDecoder(bytes.NewReader(resources))
+
+	var res [][]byte
+	for {
+		var value interface{}
+		err := dec.Decode(&value)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		valueBytes, err := yaml.Marshal(value)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, valueBytes)
+	}
+	return res, nil
 }
