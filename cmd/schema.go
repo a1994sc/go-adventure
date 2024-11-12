@@ -13,6 +13,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type Document struct {
+	data interface{}
+}
+
+func (d *Document) addField(key, value string) {
+	v, _ := d.data.(map[string]interface{})
+	v[key] = value
+	d.data = v
+}
+
+func (d *Document) containsField(key string) bool {
+	v, _ := d.data.(map[string]interface{})
+	return v[key] != nil
+}
+
 var ListSchema fs.ReadFileFS
 
 var schemaCmd = &cobra.Command{
@@ -26,30 +41,40 @@ var schemaCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
+		d := &Document{}
+
 		docs, _ := transform.SplitYAML(content)
 
 		for _, doc := range docs {
-			var m interface{}
-			err = yaml.Unmarshal([]byte(doc), &m)
+			err = yaml.Unmarshal([]byte(doc), &d.data)
 			if err != nil {
 				panic(err)
 			}
+
 			data, err := ListSchema.ReadFile("schema/list.schema.json")
 			if err != nil {
 				log.Fatal(err)
 			}
+
 			compiler := jsonschema.NewCompiler()
 			if err := compiler.AddResource("schema/list.schema.json", strings.NewReader(string(data))); err != nil {
 				panic(err)
 			}
+
+			if !d.containsField("x-tra") {
+				d.addField("x-tra", "blah")
+			}
+
+			fmt.Println(d.data)
+
 			schema, err := compiler.Compile("schema/list.schema.json")
 			if err != nil {
 				log.Fatal(err)
 			}
-			if err := schema.ValidateInterface(m); err != nil {
+
+			if err := schema.ValidateInterface(d.data); err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println(m)
 		}
 	},
 }
