@@ -2,8 +2,8 @@ schema = 3
 
 [mod]
   [mod."github.com/goccy/go-yaml"]
-    version = "v1.15.3"
-    hash = "sha256-glvQqxmtv97+C7cynOe1jKLs5OWlZVaIkBWJVEY8730="
+    version = "v1.15.4"
+    hash = "sha256-fZVaFI4nX33ZrKo4ECcqok0zm+DvUpdy9uq6KNnx4vU="
   [mod."github.com/inconshreveable/mousetrap"]
     version = "v1.1.0"
     hash = "sha256-XWlYH0c8IcxAwQTnIi6WYqq44nOKUylSWxWO/vi+8pE="
