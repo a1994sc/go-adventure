@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  dependabot:
+  dependabot-core:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
@@ -33,3 +33,16 @@ jobs:
             git commit -am "update gomod2nix"
             git push origin HEAD:${{ github.head_ref }}
           fi
+
+  dependabot-merge:
+    name: 'Dependabot auto-merge'
+    needs:
+    - dependabot-core
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'}}
+    steps:
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
