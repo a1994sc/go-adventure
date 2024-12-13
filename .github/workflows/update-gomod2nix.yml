@@ -17,8 +17,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      - name: Configure gitsign
-        uses: chainguard-dev/actions/setup-gitsign@main
+      # - name: Configure gitsign
+      #   uses: chainguard-dev/actions/setup-gitsign@main
 
       - name: Install Nix
         uses: cachix/install-nix-action@v30
