@@ -3,7 +3,7 @@ module github.com/a1994sc/axol
 go 1.22
 
 require (
-	github.com/goccy/go-yaml v1.15.23
+	github.com/goccy/go-yaml v1.16.0
 	github.com/santhosh-tekuri/jsonschema v1.2.4
 	github.com/spf13/cobra v1.9.1
 )
